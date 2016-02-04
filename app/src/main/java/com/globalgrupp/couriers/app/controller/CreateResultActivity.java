@@ -41,6 +41,9 @@ import java.util.Locale;
  * Created by п on 02.02.2016.
  */
 public class CreateResultActivity extends AppCompatActivity {
+    private String country="Россия";
+    private String city="Пермь";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,24 +56,38 @@ public class CreateResultActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 try{
+                    String myLocation=country+" "+city+" "+getIntent().getStringExtra("address");
+                    Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());//Locale.getIso
+                    List<Address> addresses = geocoder.getFromLocationName(myLocation, 1);
+                    Address address = addresses.get(0);
+                    double longitude = address.getLongitude();
+                    double latitude = address.getLatitude();
 
-                List<Long> photoIds=new ArrayList<Long>();
-                if (photoPathList.size()>0){
-                    for (int i=0;i<photoPathList.size();i++){
-                        Long phId=new UploadFileOperation().execute(photoPathList.get(i)).get();
-                        photoIds.add(phId);
-                    }
-                }
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                             ApplicationSettings.getInstance().getmGoogleApiClient());
                     Geocoder gc=new Geocoder(getApplicationContext(), Locale.getDefault());
                     List<Address> addres= gc.getFromLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude(),1);//по идее хватит и одного адреса
                     Address eAddres=addres.get(0);
 
+                    boolean correctPlace=true;
+                    if (200<distFrom(latitude,longitude,mLastLocation.getLatitude(),mLastLocation.getLongitude())){
+                        correctPlace=false;
+                    }
+
+                    List<Long> photoIds=new ArrayList<Long>();
+                    if (photoPathList.size()>0){
+                        for (int i=0;i<photoPathList.size();i++){
+                            Long phId=new UploadFileOperation().execute(photoPathList.get(i)).get();
+                            photoIds.add(phId);
+                        }
+                    }
+
+
                     TaskResult result=new TaskResult();
                     EditText etComment=(EditText)findViewById(R.id.etEventText);
                     result.setComment(etComment.getText().toString());
                     result.setPhotoIds(photoIds);
+                    result.setCorrectPlace(correctPlace);
 
                     result.setLocation(eAddres.getThoroughfare()+" "+ eAddres.getSubThoroughfare());
                     Long resId=getIntent().getLongExtra("resId",0);
@@ -94,6 +111,21 @@ public class CreateResultActivity extends AppCompatActivity {
 
 
     }
+
+    private static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        double dist = (double) (earthRadius * c);
+
+        return dist;
+    }
+
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

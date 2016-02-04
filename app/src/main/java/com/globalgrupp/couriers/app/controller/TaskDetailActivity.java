@@ -66,6 +66,7 @@ public class TaskDetailActivity extends AppCompatActivity {
                             int z=v.getId();
                             Intent detailsIntent=new Intent(getApplicationContext(),ResultActivity.class);
                             detailsIntent.putExtra("taskAddressResultLinkId",fTask.getTaskAddresResultLinkId());
+                            detailsIntent.putExtra("address",fTask.getStreet()+" "+fTask.getHouseNumber());
                             startActivity(detailsIntent);
                         }
                     });

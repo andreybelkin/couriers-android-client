@@ -79,8 +79,10 @@ public class ResultActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Long id=getIntent().getLongExtra("taskAddressResultLinkId",0);
+                String address=getIntent().getStringExtra("address");
                 Intent createIntent=new Intent(getApplicationContext(),CreateResultActivity.class);
                 createIntent.putExtra("resId",id);
+                createIntent.putExtra("address",address);
                 startActivity(createIntent);
                 return false;
             }
