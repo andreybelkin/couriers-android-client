@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.globalgrupp.couriers.app.classes.ApplicationSettings;
 import com.globalgrupp.couriers.app.classes.GetTasksOperation;
 import com.globalgrupp.couriers.app.classes.Task;
+import com.globalgrupp.couriers.app.controller.AboutActivity;
 import com.globalgrupp.couriers.app.controller.TaskDetailActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -102,7 +103,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 //        if (id == R.id.action_settings) {
 //            return true;
 //        }
-
+        if (id==R.id.action_about){
+            Intent intent=new Intent(getApplicationContext(), AboutActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
 

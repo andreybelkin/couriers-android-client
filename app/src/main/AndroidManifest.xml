@@ -55,6 +55,9 @@
         <activity
                 android:name=".controller.ViewResultActivity"
                 android:label="Просмотр" />
+        <activity
+                android:name=".controller.AboutActivity"
+                android:label="О пользователе" />
         <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version" />

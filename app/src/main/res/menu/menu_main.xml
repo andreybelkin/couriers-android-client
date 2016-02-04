@@ -6,4 +6,8 @@
           android:title="Отметить результат"
           android:orderInCategory="100"
           app:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_about"
+          android:title="О пользователе"
+          android:orderInCategory="101"
+          app:showAsAction="never"/>
 </menu>
