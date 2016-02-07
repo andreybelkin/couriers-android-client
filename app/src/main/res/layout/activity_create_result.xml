@@ -53,6 +53,24 @@
                 </TableRow>
                 <TableRow
                         android:layout_width="match_parent"
+                        android:layout_height="148dp">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Подъезд"
+                            android:id="@+id/textView2"
+                            android:layout_weight="1" android:layout_gravity="center_vertical"/>
+                    <NumberPicker
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/numberPicker"
+                            android:scaleX="0.8"
+                            android:scaleY="0.8"
+                            android:layout_marginRight="50dp"/>
+                </TableRow>
+                <TableRow
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/trImageRow" android:background="@null">
                     <HorizontalScrollView
                             android:layout_width="fill_parent"

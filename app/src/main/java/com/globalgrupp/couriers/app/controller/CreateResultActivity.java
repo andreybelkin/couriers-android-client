@@ -17,10 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.*;
 import com.globalgrupp.couriers.app.R;
 import com.globalgrupp.couriers.app.classes.ApplicationSettings;
 import com.globalgrupp.couriers.app.classes.CreateResultOperation;
@@ -49,6 +46,13 @@ public class CreateResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_create_result);
+
+        NumberPicker numberPicker=(NumberPicker)findViewById(R.id.numberPicker);
+        numberPicker.setMinValue(1);
+
+        numberPicker.setValue(1);
+        Long porchCount=getIntent().getLongExtra("porchCount",1);;
+        numberPicker.setMaxValue(porchCount.intValue());
 
         Button sendButton=(Button)findViewById(R.id.btnSend);
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +92,8 @@ public class CreateResultActivity extends AppCompatActivity {
                     result.setComment(etComment.getText().toString());
                     result.setPhotoIds(photoIds);
                     result.setCorrectPlace(correctPlace);
-
+                    NumberPicker numberPicker=(NumberPicker)findViewById(R.id.numberPicker);
+                    result.setPorch(String.valueOf(numberPicker.getValue()));
                     result.setLocation(eAddres.getThoroughfare()+" "+ eAddres.getSubThoroughfare());
                     Long resId=getIntent().getLongExtra("resId",0);
                     result.setTaskAddressResultLinkId(resId);
