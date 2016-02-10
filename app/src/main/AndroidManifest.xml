@@ -51,6 +51,7 @@
                 android:label="Результат" />
         <activity
                 android:name=".controller.CreateResultActivity"
+                android:windowSoftInputMode="adjustPan"
                 android:label="" />
         <activity
                 android:name=".controller.ViewResultActivity"

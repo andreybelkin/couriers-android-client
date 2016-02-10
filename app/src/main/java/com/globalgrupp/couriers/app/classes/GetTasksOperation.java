@@ -36,7 +36,7 @@ public class GetTasksOperation extends AsyncTask<Context, Void, List<Task>> {
         List<Task> result=new ArrayList<Task>();
         try
         {
-            String urlString="http://46.146.171.6:8080/service/getMyTasks/"+GCMRegistrationHelper.getRegistrationId(params[0]);
+            String urlString="http://188.227.16.166:8081/service/getMyTasks/"+GCMRegistrationHelper.getRegistrationId(params[0]);
             // Defined URL  where to send data
 //            JSONObject msg=new JSONObject();
 //            msg.put("app_id","Asdfafd");

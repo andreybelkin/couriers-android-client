@@ -26,18 +26,11 @@ public class TaskDetailActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_task);
-
-
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
-
         if (getIntent().hasExtra("taskId")){
             try{
                 Long id=getIntent().getLongExtra("taskId",0);

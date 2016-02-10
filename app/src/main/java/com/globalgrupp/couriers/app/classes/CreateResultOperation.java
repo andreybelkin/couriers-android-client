@@ -43,7 +43,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
 //
 //            private String porch;
 
-            String urlString="http://46.146.171.6:8080/service/createResult/";
+            String urlString="http://188.227.16.166:8081/service/createResult/";
             // Defined URL  where to send data
             JSONObject msg=new JSONObject();
             msg.put("taskAddressResultLinkId",params[0].getTaskAddressResultLinkId());
@@ -51,6 +51,8 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
             JSONArray array=new JSONArray(params[0].getPhotoIds());
             msg.put("photoIds",array);
             msg.put("location",params[0].getLocation());
+            msg.put("correctPlace",params[0].isCorrectPlace());
+            msg.put("porch",params[0].getPorch());
 
             URL url = new URL(urlString);
 

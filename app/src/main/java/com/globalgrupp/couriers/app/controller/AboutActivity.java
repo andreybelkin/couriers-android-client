@@ -24,7 +24,7 @@ public class AboutActivity extends AppCompatActivity {
             Courier courier=new GetCourierInfoOperation().execute(regId).get();
             TextView tvId=(TextView)findViewById(R.id.tvId);
             tvId.setText("Курьер "+courier.getId());
-            if (courier.getName()!=null){
+            if (courier.getName()!=null&&!courier.getName().equals("null") && courier.getName()!="null"){
                 TextView tvName=(TextView)findViewById(R.id.tvName);
                 tvName.setText(courier.getName());
             }

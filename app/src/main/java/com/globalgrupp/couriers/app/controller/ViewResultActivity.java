@@ -38,7 +38,7 @@ public class ViewResultActivity extends AppCompatActivity {
                 for (int i=0;i<photoIds.size();i++){
                     try {
 
-                        final String photoFilePath=new FileDownloadTask().execute("http://46.146.171.6:8080/service/getFile/"+photoIds.get(i),"jpg").get();
+                        final String photoFilePath=new FileDownloadTask().execute("http://188.227.16.166:8081/service/getFile/"+photoIds.get(i),"jpg").get();
 
                         ViewGroup.LayoutParams phLayoutParams = findViewById(R.id.trImageRow).getLayoutParams();
                         phLayoutParams.height =150;

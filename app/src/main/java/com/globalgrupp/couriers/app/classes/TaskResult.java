@@ -80,4 +80,14 @@ public class TaskResult implements Serializable{
     public void setTaskAddressResultLinkId(Long taskAddressResultLinkId) {
         this.taskAddressResultLinkId = taskAddressResultLinkId;
     }
+
+    private boolean correctPlace;
+
+    public boolean isCorrectPlace() {
+        return correctPlace;
+    }
+
+    public void setCorrectPlace(boolean correctPlace) {
+        this.correctPlace = correctPlace;
+    }
 }

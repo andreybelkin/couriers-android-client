@@ -34,7 +34,7 @@ public class GetTaskByIdOperation extends AsyncTask<String, Void, List<Task>> {
         List<Task> result=new ArrayList<Task>();
         try
         {
-            String urlString="http://46.146.171.6:8080/service/getTaskById/"+params[0];
+            String urlString="http://188.227.16.166:8081/service/getTaskById/"+params[0];
             // Defined URL  where to send data
 //            JSONObject msg=new JSONObject();
 //            msg.put("app_id","Asdfafd");
@@ -91,22 +91,8 @@ public class GetTaskByIdOperation extends AsyncTask<String, Void, List<Task>> {
                     address.setStreet(addressObject.getString("street"));
                     address.setHouseNumber(addressObject.getString("houseNumber"));
                     address.setTaskAddresResultLinkId(comObject.getLong("id"));
+                    address.setPorchCount(addressObject.getLong("porchCount"));
                     addressArrayList.add(address);
-//                    Comment com=new Comment();
-//                    com.setId(comObject.getLong("id"));
-//                    com.setMessage(comObject.getString("message"));
-//                    com.setCreateDate(new Date(comObject.getLong("createDate")));
-//                    com.setAudioId(!comObject.isNull("audioId")?comObject.getLong("audioId"):null);
-//                    com.setVideoId(!comObject.isNull("videoId")?comObject.getLong("videoId"):null);
-//                    List<Long> commentPhotoIds=new ArrayList<Long>();
-//                    JSONArray commentPhotoArray=comObject.getJSONArray("photoIds");
-//                    for (int z=0;z<commentPhotoArray.length(); z++){
-//                        Long photoId=commentPhotoArray.getLong(z);
-//                        commentPhotoIds.add(photoId);
-//                    }
-//                    com.setPhotoIds(commentPhotoIds);
-//                    comments.add(com);
-
                 }
                 e.setAddressList(addressArrayList);
 //                e.setComments(comments);
