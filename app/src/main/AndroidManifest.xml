@@ -48,7 +48,7 @@
                 android:label="Адреса" />
         <activity
                 android:name=".controller.ResultActivity"
-                android:label="Результат" />
+                android:label="Результат " />
         <activity
                 android:name=".controller.CreateResultActivity"
                 android:windowSoftInputMode="adjustPan"
