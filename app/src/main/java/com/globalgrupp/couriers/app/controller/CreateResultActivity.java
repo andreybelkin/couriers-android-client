@@ -1,6 +1,8 @@
 package com.globalgrupp.couriers.app.controller;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -13,21 +15,19 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.*;
+import com.globalgrupp.couriers.app.MainActivity;
 import com.globalgrupp.couriers.app.R;
-import com.globalgrupp.couriers.app.classes.ApplicationSettings;
-import com.globalgrupp.couriers.app.classes.CreateResultOperation;
-import com.globalgrupp.couriers.app.classes.TaskResult;
-import com.globalgrupp.couriers.app.classes.UploadFileOperation;
+import com.globalgrupp.couriers.app.classes.*;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,62 +51,10 @@ public class CreateResultActivity extends AppCompatActivity {
         numberPicker.setMinValue(1);
 
         numberPicker.setValue(1);
-        Long porchCount=getIntent().getLongExtra("porchCount",1);;
+        Long porchCount=getIntent().getLongExtra("porchCount",15);;
         numberPicker.setMaxValue(porchCount.intValue());
 
-        Button sendButton=(Button)findViewById(R.id.btnSend);
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try{
-                    String myLocation=country+" "+city+" "+getIntent().getStringExtra("address");
-                    Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());//Locale.getIso
-                    List<Address> addresses = geocoder.getFromLocationName(myLocation, 1);
-                    Address address = addresses.get(0);
-                    double longitude = address.getLongitude();
-                    double latitude = address.getLatitude();
-
-                    Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                            ApplicationSettings.getInstance().getmGoogleApiClient());
-                    Geocoder gc=new Geocoder(getApplicationContext(), Locale.getDefault());
-                    List<Address> addres= gc.getFromLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude(),1);//по идее хватит и одного адреса
-                    Address eAddres=addres.get(0);
-
-                    boolean correctPlace=true;
-                    if (200<distFrom(latitude,longitude,mLastLocation.getLatitude(),mLastLocation.getLongitude())){
-                        correctPlace=false;
-                    }
-
-                    List<Long> photoIds=new ArrayList<Long>();
-                    if (photoPathList.size()>0){
-                        for (int i=0;i<photoPathList.size();i++){
-                            Long phId=new UploadFileOperation().execute(photoPathList.get(i)).get();
-                            photoIds.add(phId);
-                        }
-                    }
-
-
-                    TaskResult result=new TaskResult();
-                    EditText etComment=(EditText)findViewById(R.id.etEventText);
-                    result.setComment(etComment.getText().toString());
-                    result.setPhotoIds(photoIds);
-                    result.setCorrectPlace(correctPlace);
-                    NumberPicker numberPicker=(NumberPicker)findViewById(R.id.numberPicker);
-                    result.setPorch(String.valueOf(numberPicker.getValue()));
-                    result.setLocation(eAddres.getThoroughfare()+" "+ eAddres.getSubThoroughfare());
-                    Long resId=getIntent().getLongExtra("resId",0);
-                    result.setTaskAddressResultLinkId(resId);
-
-                    new CreateResultOperation().execute(result).get();
-                    finish();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        Button photoButton=(Button)findViewById(R.id.btnPhoto);
+        final Button photoButton=(Button)findViewById(R.id.btnPhoto);
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,9 +63,151 @@ public class CreateResultActivity extends AppCompatActivity {
         });
 
 
+        final Button sendButton=(Button)findViewById(R.id.btnSend);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendButton.setEnabled(false);
+                photoButton.setEnabled(false);
+                ProgressBar progressBar=(ProgressBar)findViewById(R.id.marker_progress);
+                progressBar.setVisibility(View.VISIBLE);
+
+                try{
+                    boolean IsServerConnectionOk=true;
+                    String myLocation=country+" "+city+" "+getIntent().getStringExtra("address");
+                    Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());//Locale.getIso
+                    SimpleGeoCoords addressGeoCoords=null;
+                    try{
+                        List<Address> addresses = geocoder.getFromLocationName(myLocation, 1);
+                        Address address = addresses.get(0);
+                        addressGeoCoords=new SimpleGeoCoords();
+                        addressGeoCoords.setLongitude(address.getLongitude());
+                        addressGeoCoords.setLatitude(address.getLatitude());
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        IsServerConnectionOk=false;
+                    }
+
+
+                    Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                            ApplicationSettings.getInstance().getmGoogleApiClient());
+                    if (mLastLocation==null){
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Не удалось определить местоположение.", Toast.LENGTH_LONG);
+                        toast.show();
+                        sendButton.setEnabled(true);
+                        photoButton.setEnabled(true);
+                    }
+                    Address courierAddres=null;
+                    SimpleGeoCoords courierGeoCoords=new SimpleGeoCoords();
+                    courierGeoCoords.setLatitude(mLastLocation.getLatitude());
+                    courierGeoCoords.setLongitude(mLastLocation.getLongitude());
+                    try{
+                        List<Address> addres= geocoder.getFromLocation(mLastLocation.getLatitude(),mLastLocation.getLongitude(),1);//по идее хватит и одного адреса
+                        courierAddres=addres.get(0);
+                    }catch( Exception e){
+                        IsServerConnectionOk=false;
+                        e.printStackTrace();
+                    }
+
+
+                    Boolean correctPlace=true;
+                    if (addressGeoCoords!=null){
+                        if (200<distFrom(addressGeoCoords.getLatitude(),addressGeoCoords.getLongitude(),mLastLocation.getLatitude(),mLastLocation.getLongitude())){
+                            correctPlace=false;
+                        }
+                    }
+
+
+                    List<Long> photoIds=new ArrayList<Long>();
+                    if (photoPathList.size()>0){
+                        for (int i=0;i<photoPathList.size();i++){
+                            Long phId=new UploadFileOperation().execute(photoPathList.get(i)).get();
+                            if (phId==null){
+//                                throw new Exception("Server not available");
+                                IsServerConnectionOk=false;
+                                break;
+                            }
+                            photoIds.add(phId);
+                        }
+                    }
+                    TaskResult result=new TaskResult();
+
+                    result.setCourierCoords(courierGeoCoords);
+
+                    result.setAddressString(myLocation);
+                    result.setPhotoPathList(photoPathList);
+                    EditText etComment=(EditText)findViewById(R.id.etEventText);
+                    result.setComment(etComment.getText().toString());
+                    result.setPhotoIds(photoIds);
+
+                    //не смогли получить координату адреса и как следствие проверить местонахождение
+                    //иначе всё норм
+                    if (addressGeoCoords==null){
+                        result.setCorrectPlace(null);
+                    }else{
+                        result.setCorrectPlace(correctPlace);
+                    }
+
+
+                    NumberPicker numberPicker=(NumberPicker)findViewById(R.id.numberPicker);
+                    result.setPorch(String.valueOf(numberPicker.getValue()));
+
+                    //если адрес определился, то инет норм
+                    //иначе не получили название местонахождения курьера
+                    if (courierAddres!=null){
+                        result.setLocation(courierAddres.getThoroughfare()+" "+ courierAddres.getSubThoroughfare());
+                    } else {
+                        result.setLocation(null);
+                    }
+
+                    Long resId=getIntent().getLongExtra("resId",0);
+                    result.setTaskAddressResultLinkId(resId);
+                    if (IsServerConnectionOk){
+                        new CreateResultOperation().execute(result).get();
+                        finish();
+                    } else {
+                        final SharedPreferences prefs = getApplicationContext().getSharedPreferences(
+                                MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+                        String queueString = prefs.getString("messageQueue","[]");
+                        Gson gson = new Gson();
+
+                        List<TaskResult> queueResults=new ArrayList<TaskResult>();
+                        Type listType = new TypeToken<ArrayList<TaskResult>>() {
+                        }.getType();
+                        queueResults=gson.fromJson(queueString,listType);
+                        queueResults.add(result);
+                        SharedPreferences.Editor prefsEditor = prefs.edit();
+                        String json = gson.toJson(queueResults);
+                        prefsEditor.putString("messageQueue", json);
+                        prefsEditor.commit();
+
+
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Проблемы с соединением.\n Сообщение помещено в очередь и будет отправлено позже.", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Проблемы с соединением.\n Повторите попытку позже.", Toast.LENGTH_LONG);
+                    toast.show();
+                }finally {
+                }
+
+                progressBar.setVisibility(View.GONE);
+                //sendButton.setEnabled(true);
+            }
+        });
+
+
+
+
     }
 
-    private static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
         double dLat = Math.toRadians(lat2-lat1);
         double dLng = Math.toRadians(lng2-lng1);

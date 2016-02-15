@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * Created by п on 02.02.2016.
  */
-public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
+public class CreateResultOperation extends AsyncTask<TaskResult, Void, Boolean> {
 
     // Required initialization
 
@@ -25,7 +25,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
     String data ="";
 
     @Override
-    protected Void doInBackground(TaskResult... params) {
+    protected Boolean doInBackground(TaskResult... params) {
         /************ Make Post Call To Web Server ***********/
         BufferedReader reader=null;
         Log.i("doInBackground service ","doInBackground service ");
@@ -33,17 +33,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
         try
         {
 
-//            private Long id;
-//
-//            private Long taskAddressResultLinkId;
-//
-//            private Long result;
-//
-//            private String comment;
-//
-//            private String porch;
-
-            String urlString="http://188.227.16.166:8081/service/createResult/";
+            String urlString="http://192.168.1.33:8081/service/createResult/";
             // Defined URL  where to send data
             JSONObject msg=new JSONObject();
             msg.put("taskAddressResultLinkId",params[0].getTaskAddressResultLinkId());
@@ -51,7 +41,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
             JSONArray array=new JSONArray(params[0].getPhotoIds());
             msg.put("photoIds",array);
             msg.put("location",params[0].getLocation());
-            msg.put("correctPlace",params[0].isCorrectPlace());
+            msg.put("correctPlace",params[0].getCorrectPlace());
             msg.put("porch",params[0].getPorch());
 
             URL url = new URL(urlString);
@@ -66,7 +56,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
             conn.setRequestProperty("Accept","*/*");
             conn.setRequestProperty("Content-Type","application/json");
             conn.setRequestProperty("charset", "utf-8");
-            conn.setConnectTimeout(20000);
+            conn.setConnectTimeout(3000);
             conn.setReadTimeout(20000);
 
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -83,6 +73,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
             catch (Exception e){
                 e.printStackTrace();
                 is=conn.getErrorStream();
+                return false;
             }
             reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
@@ -101,6 +92,8 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
             Error = ex.getMessage();
             Log.d(ex.getMessage(),ex.getMessage());
             ex.printStackTrace();
+            return false;
+
         }
         finally
         {
@@ -112,7 +105,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Void> {
                 ex.printStackTrace();
             }
         }
-        return null;
+        return true;
     }
 
 }

@@ -20,6 +20,38 @@ public class TaskResult implements Serializable{
 
     private List<Long> photoIds;
 
+    private List<String> photoPathList;
+
+
+    private String addressString;
+
+
+    private SimpleGeoCoords courierCoords;
+
+    public SimpleGeoCoords getCourierCoords() {
+        return courierCoords;
+    }
+
+    public void setCourierCoords(SimpleGeoCoords courierCoords) {
+        this.courierCoords = courierCoords;
+    }
+
+    public String getAddressString() {
+        return addressString;
+    }
+
+    public void setAddressString(String addressString) {
+        this.addressString = addressString;
+    }
+
+    public List<String> getPhotoPathList() {
+        return photoPathList;
+    }
+
+    public void setPhotoPathList(List<String> photoPathList) {
+        this.photoPathList = photoPathList;
+    }
+
     private String location;
 
     public String getLocation() {
@@ -81,13 +113,13 @@ public class TaskResult implements Serializable{
         this.taskAddressResultLinkId = taskAddressResultLinkId;
     }
 
-    private boolean correctPlace;
+    private Boolean correctPlace;
 
-    public boolean isCorrectPlace() {
+    public Boolean getCorrectPlace() {
         return correctPlace;
     }
 
-    public void setCorrectPlace(boolean correctPlace) {
+    public void setCorrectPlace(Boolean correctPlace) {
         this.correctPlace = correctPlace;
     }
 }

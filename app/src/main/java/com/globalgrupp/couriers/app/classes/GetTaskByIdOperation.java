@@ -34,7 +34,7 @@ public class GetTaskByIdOperation extends AsyncTask<String, Void, List<Task>> {
         List<Task> result=new ArrayList<Task>();
         try
         {
-            String urlString="http://188.227.16.166:8081/service/getTaskById/"+params[0];
+            String urlString="http://192.168.1.33:8081/service/getTaskById/"+params[0];
             // Defined URL  where to send data
 //            JSONObject msg=new JSONObject();
 //            msg.put("app_id","Asdfafd");
@@ -89,9 +89,10 @@ public class GetTaskByIdOperation extends AsyncTask<String, Void, List<Task>> {
                     JSONObject addressObject=comObject.getJSONObject("address");
                     Address address=new Address();
                     address.setStreet(addressObject.getString("street"));
-                    address.setHouseNumber(addressObject.getString("houseNumber"));
+                    address.setHouseNumber(addressObject.isNull("houseNumber")?"":addressObject.getString("houseNumber"));
                     address.setTaskAddresResultLinkId(comObject.getLong("id"));
-                    address.setPorchCount(addressObject.getLong("porchCount"));
+                    address.setPorchCount(addressObject.isNull("porchCount")?15:addressObject.getLong("porchCount"));
+//                    address.setPorchCount(addressObject.getLong("porchCount"));
                     addressArrayList.add(address);
                 }
                 e.setAddressList(addressArrayList);

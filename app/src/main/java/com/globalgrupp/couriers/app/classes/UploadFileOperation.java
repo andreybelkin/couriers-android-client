@@ -27,7 +27,7 @@ public class UploadFileOperation extends AsyncTask<String, Void, Long> {
         try
         {
 
-            String urlString="http://188.227.16.166:8081/service/uploadFile";
+            String urlString="http://192.168.1.33:8081/service/uploadFile";
 
 
 
@@ -38,6 +38,7 @@ public class UploadFileOperation extends AsyncTask<String, Void, Long> {
             HttpURLConnection conn =(HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
+            conn.setConnectTimeout(3000);
             conn.setRequestMethod("PUT");
             conn.setRequestProperty("User-Agent","Mozilla/5.0");
             conn.setRequestProperty("Accept","*/*");
