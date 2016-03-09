@@ -54,7 +54,7 @@
                 android:windowSoftInputMode="adjustPan"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:screenOrientation="portrait"
-                android:label="" />
+                android:label="" /> 
         <activity
                 android:name=".controller.ViewResultActivity"
                 android:label="Просмотр" />
