@@ -33,7 +33,7 @@ public class CreateResultOperation extends AsyncTask<TaskResult, Void, Boolean> 
         try
         {
 
-            String urlString="http://192.168.1.33:8081/service/createResult/";
+            String urlString = ApplicationSettings.getServerURL() + "/service/createResult/";
             // Defined URL  where to send data
             JSONObject msg=new JSONObject();
             msg.put("taskAddressResultLinkId",params[0].getTaskAddressResultLinkId());

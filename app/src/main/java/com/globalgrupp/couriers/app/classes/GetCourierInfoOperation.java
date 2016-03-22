@@ -31,7 +31,7 @@ public class GetCourierInfoOperation extends AsyncTask<String, Void, Courier> {
         Courier courier=new Courier();
         try
         {
-            String urlString="http://192.168.1.33:8081/service/getCourierInfo/"+params[0];
+            String urlString = ApplicationSettings.getServerURL() + "/service/getCourierInfo/"+params[0];
             // Defined URL  where to send data
 //            JSONObject msg=new JSONObject();
 //            msg.put("app_id","Asdfafd");

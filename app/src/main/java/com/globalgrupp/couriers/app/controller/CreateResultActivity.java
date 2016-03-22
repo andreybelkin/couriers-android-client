@@ -91,7 +91,7 @@ public class CreateResultActivity extends AppCompatActivity {
 
 
                     Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
-                            ApplicationSettings.getInstance().getmGoogleApiClient());
+                            ApplicationSettings.getmGoogleApiClient());
                     if (mLastLocation==null){
                         Toast toast = Toast.makeText(getApplicationContext(),
                                 "Не удалось определить местоположение.", Toast.LENGTH_LONG);

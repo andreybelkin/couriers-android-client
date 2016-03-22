@@ -25,20 +25,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApplicationSettings.setApplicationContext(getApplicationContext());
+
         setContentView(R.layout.activity_main);
 
-        ApplicationSettings.getInstance().setmGoogleApiClient( new GoogleApiClient.Builder(this)
+        ApplicationSettings.setmGoogleApiClient( new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build());
-        ApplicationSettings.getInstance().getmGoogleApiClient().connect();
-
+        ApplicationSettings.getmGoogleApiClient().connect();
 
     }
 

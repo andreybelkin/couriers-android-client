@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 import com.globalgrupp.couriers.app.MainActivity;
+import com.globalgrupp.couriers.app.classes.ApplicationSettings;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.*;
@@ -130,7 +131,7 @@ public class GCMRegistrationHelper {
         editor.commit();
     }
     private static Boolean sendRegId(String regId) throws Exception {
-        String urlString="http://192.168.1.33:8081/service/savePushAppId/"+regId;
+        String urlString= ApplicationSettings.getServerURL() + "/service/savePushAppId/"+regId;
         URL url = new URL(urlString);
         // Send POST data request
         HttpURLConnection conn =(HttpURLConnection) url.openConnection();

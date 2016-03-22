@@ -34,7 +34,7 @@ public class GetTaskByIdOperation extends AsyncTask<String, Void, List<Task>> {
         List<Task> result=new ArrayList<Task>();
         try
         {
-            String urlString="http://192.168.1.33:8081/service/getTaskById/"+params[0];
+            String urlString=ApplicationSettings.getServerURL() + "/service/getTaskById/"+params[0];
             // Defined URL  where to send data
 //            JSONObject msg=new JSONObject();
 //            msg.put("app_id","Asdfafd");

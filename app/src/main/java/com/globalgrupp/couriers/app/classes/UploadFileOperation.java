@@ -27,7 +27,7 @@ public class UploadFileOperation extends AsyncTask<String, Void, Long> {
         try
         {
 
-            String urlString="http://192.168.1.33:8081/service/uploadFile";
+            String urlString=ApplicationSettings.getServerURL() + "/service/uploadFile";
 
 
 

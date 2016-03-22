@@ -35,7 +35,7 @@ public class GetTaskResultsOperation extends AsyncTask<String, Void, List<TaskRe
         List<TaskResult> result=new ArrayList<TaskResult>();
         try
         {
-            String urlString="http://192.168.1.33:8081/service/getTaskResult/";
+            String urlString=ApplicationSettings.getServerURL() + "/service/getTaskResult/";
             // Defined URL  where to send data
             JSONObject msg=new JSONObject();
             msg.put("taskAddressResultLinkId",new Long(params[0]));
